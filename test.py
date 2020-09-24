@@ -6,9 +6,6 @@ class Actuator1:
     def __init__(self):
         self.stopped = False
         self.GPON = False
-        self.timming = 0.5
-        self.outPort = 23
-        self.n = 0
 
     def start(self):
         t = Thread(target=self.run)
@@ -17,35 +14,70 @@ class Actuator1:
 
     def run(self):
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(outPort, GPIO.OUT)
+        GPIO.setup(23, GPIO.OUT)
         while(True):
             if(self.stopped):
+                GPIO.output(23, False)
                 return
-            GPIO.output(outPort, GPON)
+            GPIO.output(23, self.GPON)
             sleep(0.5)
-            GPON = not GPON
+            self.GPON = not self.GPON
     
     def stop(self):
         self.stopped = True
-    def setTime(self):
-        self.timming = self.timming + 0.1
-    def setOut(self):
-        n = n+1
-        if(n > 2):
-            n = 0
-            outport = 23
-        if(n == 1):
-            outport = 24
-        if(n == 2):
-            outport = 25
+
+class Actuator2:
+    def __init__(self):
+        self.stopped = False
+        self.GPON = False
+
+    def start(self):
+        t = Thread(target=self.run)
+        t.daemon = True
+        t.start()
+
+    def run(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(24, GPIO.OUT)
+        while(True):
+            if(self.stopped):
+                GPIO.output(24, False)
+                return
+            GPIO.output(24, self.GPON)
+            sleep(0.5)
+            self.GPON = not self.GPON
+    
+    def stop(self):
+        self.stopped = True
+
+class Actuator3:
+    def __init__(self):
+        self.stopped = False
+        self.GPON = False
+
+    def start(self):
+        t = Thread(target=self.run)
+        t.daemon = True
+        t.start()
+
+    def run(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(25, GPIO.OUT)
+        while(True):
+            if(self.stopped):
+                GPIO.output(25, False)
+                return
+            GPIO.output(25, self.GPON)
+            sleep(0.7)
+            self.GPON = not self.GPON
+    
+    def stop(self):
+        self.stopped = True
+
 
 greenLight = Actuator1()
-yellowLight = Actuator1()
-yellowLight.setOut()
-redLight = Actuator1()
-redLight.setTime()
-redLight.setOut()
-redLight.setOut()
+yellowLight = Actuator2()
+redLight = Actuator3()
 
 def main():
     greenLight.start()
