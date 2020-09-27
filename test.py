@@ -3,9 +3,11 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 class Actuator1:
-    def __init__(self):
+    def __init__(outPin, timing, self):
         self.stopped = False
         self.GPON = False
+        self.output = outPin
+        self.timing = timing
 
     def start(self):
         t = Thread(target=self.run)
@@ -14,70 +16,21 @@ class Actuator1:
 
     def run(self):
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(23, GPIO.OUT)
+        GPIO.setup(self.output, GPIO.OUT)
         while(True):
             if(self.stopped):
-                GPIO.output(23, False)
+                GPIO.output(self.output, False)
                 return
-            GPIO.output(23, self.GPON)
-            sleep(0.5)
+            GPIO.output(self.output, self.GPON)
+            sleep(self.timing)
             self.GPON = not self.GPON
     
     def stop(self):
         self.stopped = True
 
-class Actuator2:
-    def __init__(self):
-        self.stopped = False
-        self.GPON = False
-
-    def start(self):
-        t = Thread(target=self.run)
-        t.daemon = True
-        t.start()
-
-    def run(self):
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(24, GPIO.OUT)
-        while(True):
-            if(self.stopped):
-                GPIO.output(24, False)
-                return
-            GPIO.output(24, self.GPON)
-            sleep(0.5)
-            self.GPON = not self.GPON
-    
-    def stop(self):
-        self.stopped = True
-
-class Actuator3:
-    def __init__(self):
-        self.stopped = False
-        self.GPON = False
-
-    def start(self):
-        t = Thread(target=self.run)
-        t.daemon = True
-        t.start()
-
-    def run(self):
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(25, GPIO.OUT)
-        while(True):
-            if(self.stopped):
-                GPIO.output(25, False)
-                return
-            GPIO.output(25, self.GPON)
-            sleep(0.7)
-            self.GPON = not self.GPON
-    
-    def stop(self):
-        self.stopped = True
-
-
-greenLight = Actuator1()
-yellowLight = Actuator2()
-redLight = Actuator3()
+greenLight = Actuator1(23, 0.5)
+yellowLight = Actuator1(24, 0.5)
+redLight = Actuator1(25, 0.7)
 
 def main():
     greenLight.start()
